@@ -54,6 +54,12 @@ Parameters:
     MaxLength: 255
     Description: "VPC stack name"
 
+  TargetGroupArn:
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    Description: "Target group arn"
+
 Resources:
 
   EcsServiceRole:
@@ -71,39 +77,6 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole
 
-  ListenerRule:
-    Type: "AWS::ElasticLoadBalancingV2::ListenerRule"
-    Properties:
-      ListenerArn: !Ref LoadBalancerListenerArn
-      Priority: 1
-      Conditions:
-        - Field: path-pattern
-          Values:
-            - /404
-      Actions:
-        - TargetGroupArn: !Ref TargetGroup
-          Type: forward
-    DependsOn:
-      - TargetGroup
-
-  TargetGroup:
-    Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
-    Properties:
-      Name: !Sub "${TaskName}-target-group"
-      VpcId: !Ref VpcId
-      Port: 8404
-      Protocol: HTTP
-      Matcher:
-        HttpCode: 200-299
-      HealthCheckIntervalSeconds: 10
-      HealthCheckPath: /
-      HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 2
-      TargetGroupAttributes:
-        - Key: deregistration_delay.timeout_seconds
-          Value: 30
-
   Service:
     Type: "AWS::ECS::Service"
     Properties:
@@ -114,7 +87,9 @@ Resources:
       LoadBalancers:
         - ContainerName: !Ref TaskName
           ContainerPort: 8404
-          TargetGroupArn: !Ref TargetGroup
+          TargetGroupArn: !Ref TargetGroupArn
+    DependsOn:
+      - TaskDefinition
 
   TaskDefinition:
     Type: "AWS::ECS::TaskDefinition"
@@ -132,4 +107,18 @@ Resources:
           Environment:
             - Name: Tag
               Value: !Ref Tag
+
+Outputs:
+
+  ServiceArn:
+    Value: !Ref Service
+    Export:
+      Name: !Sub "${AWS::StackName}-not-found-service-arn"
+
+
+  LoadBalancerDnsName:
+    Value: !GetAtt Service.Name
+    Export:
+      Name: !Sub "${AWS::StackName}-not-found-service-name"
+
 
