@@ -22,7 +22,7 @@ phases:
   pre_build:
     commands:
       - apt-get update && apt-get install -y apt-transport-https
-      - apt-get install -y golang-1.8-go
+      - apt-get install -y golang-go
       - $(aws ecr get-login)
       - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
 
