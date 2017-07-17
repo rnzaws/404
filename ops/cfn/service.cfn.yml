@@ -45,7 +45,7 @@ Parameters:
   CiRepositoryName:
     Type: String
     MinLength: 1
-    MaxLength: 100
+    MaxLength: 255
     Description: "CI/CD repository name"
 
   VpcId:
@@ -99,7 +99,7 @@ Resources:
         - Name: !Ref TaskName
           Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${CiRepositoryName}:${Tag}"
           EntryPoint:
-            - /usr/local/bin/404
+            - /opt/404
           Essential: true
           Memory: 128
           PortMappings:
