@@ -89,7 +89,7 @@ Resources:
   TargetGroup:
     Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
     Properties:
-      Name: !Sub "${AWS::StackName}-${TaskName}-tg"
+      Name: !Sub "${TaskName}-target-group"
       VpcId: !Ref VpcId
       Port: 8404
       Protocol: HTTP
