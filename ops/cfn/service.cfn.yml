@@ -22,11 +22,9 @@ Parameters:
 
   Tag:
     Type: String
-    Default: "latest"
 
   TaskName:
     Type: String
-    Default: "default"
 
   DesiredCount:
     Type: Number
@@ -41,18 +39,24 @@ Parameters:
   EcsClusterName:
     Type: String
     MinLength: 1
-    MaxLength: 50
+    MaxLength: 100
     Description: "ECS cluster name"
 
   CiRepositoryName:
     Type: String
     MinLength: 1
-    MaxLength: 50
+    MaxLength: 100
     Description: "CI/CD repository name"
+
+  VpcId:
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    Description: "VPC stack name"
 
 Resources:
 
-  ECSServiceRole:
+  EcsServiceRole:
     Type: "AWS::IAM::Role"
     Properties:
       Path: /
@@ -86,12 +90,11 @@ Resources:
     Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
     Properties:
       Name: !Sub "${AWS::StackName}-${TaskName}-tg"
-      VpcId:
-        Fn::ImportValue: !Sub "${VpcStackName}-vpc-id"
+      VpcId: !Ref VpcId
       Port: 80
       Protocol: HTTP
       Matcher:
-      HttpCode: 200-299
+        HttpCode: 200-299
       HealthCheckIntervalSeconds: 10
       HealthCheckPath: /
       HealthCheckProtocol: HTTP
@@ -105,7 +108,7 @@ Resources:
     Type: "AWS::ECS::Service"
     Properties:
       Cluster: !Ref EcsClusterName
-      Role: !Ref ECSServiceRole
+      Role: !Ref EcsServiceRole
       DesiredCount: !Ref DesiredCount
       TaskDefinition: !Ref TaskDefinition
       LoadBalancers:
