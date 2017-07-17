@@ -32,7 +32,7 @@ phases:
       - go build
       - ls -la
       - pwd
-      - docker build --tag "${REPOSITORY_URI}:${TAG}"
+      - docker build --tag "${REPOSITORY_URI}:${TAG}" .
   post_build:
     commands:
       - docker push "${REPOSITORY_URI}:${TAG}"
