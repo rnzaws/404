@@ -16,13 +16,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM alpine:3.6
+FROM golang:1.8
 
-RUN apk update
 
-# Install app
 RUN mkdir -p /opt
-COPY 404 /opt/
+COPY 404.go /opt/
+RUN cd /opt && go build -o 404 . && rm -Rf 404.go
 
 EXPOSE 8404
 
