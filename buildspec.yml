@@ -23,6 +23,8 @@ phases:
     commands:
       - apt-get update && apt-get install -y apt-transport-https
       - apt-get install -y golang-go
+      - export GOPATH=$(pwd)
+      - echo $GOPATH
       - $(aws ecr get-login)
       - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
 
@@ -31,7 +33,6 @@ phases:
       - echo "${REPOSITORY_URI}:${TAG}"
       - go build
       - ls -la
-      - ls -al src/
       - pwd
       - docker build --tag "${REPOSITORY_URI}:${TAG}" .
   post_build:
