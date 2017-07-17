@@ -98,12 +98,11 @@ Resources:
       ContainerDefinitions:
         - Name: !Ref TaskName
           Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${CiRepositoryName}:${Tag}"
-          EntryPoint:
-            - /opt/404
           Essential: true
           Memory: 128
           PortMappings:
             - ContainerPort: 8404
+              HostPort: 8404
           Environment:
             - Name: Tag
               Value: !Ref Tag
