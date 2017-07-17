@@ -21,17 +21,11 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - apt-get update && apt-get install -y apt-transport-https
-      - apt-get install -y golang-go
-      - mkdir "golang"
-      - export GOPATH=$(pwd)/golang
-      - echo $GOPATH
       - $(aws ecr get-login)
       - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
 
   build:
     commands:
-      - go build -o 404 .
       - docker build --tag "${REPOSITORY_URI}:${TAG}" .
   post_build:
     commands:
