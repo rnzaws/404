@@ -33,13 +33,13 @@ Parameters:
   LoadBalancerListenerArn:
     Type: String
     MinLength: 1
-    MaxLength: 100
+    MaxLength: 255
     Description: "ALB Listener ARN"
 
   EcsClusterName:
     Type: String
     MinLength: 1
-    MaxLength: 100
+    MaxLength: 255
     Description: "ECS cluster name"
 
   CiRepositoryName:
@@ -91,7 +91,7 @@ Resources:
     Properties:
       Name: !Sub "${AWS::StackName}-${TaskName}-tg"
       VpcId: !Ref VpcId
-      Port: 80
+      Port: 8404
       Protocol: HTTP
       Matcher:
         HttpCode: 200-299
@@ -113,7 +113,7 @@ Resources:
       TaskDefinition: !Ref TaskDefinition
       LoadBalancers:
         - ContainerName: !Ref TaskName
-          ContainerPort: 80
+          ContainerPort: 8404
           TargetGroupArn: !Ref TargetGroup
 
   TaskDefinition:
