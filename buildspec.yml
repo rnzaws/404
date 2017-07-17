@@ -28,7 +28,10 @@ phases:
 
   build:
     commands:
+      - echo "${REPOSITORY_URI}:${TAG}"
       - go build
+      - ls -la
+      - pwd
       - docker build --tag "${REPOSITORY_URI}:${TAG}"
   post_build:
     commands:
