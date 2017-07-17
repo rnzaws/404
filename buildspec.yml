@@ -31,11 +31,7 @@ phases:
 
   build:
     commands:
-      - echo "${REPOSITORY_URI}:${TAG}"
       - go build -o 404 .
-      - ls -la
-      - ls -la golang/
-      - pwd
       - docker build --tag "${REPOSITORY_URI}:${TAG}" .
   post_build:
     commands:
