@@ -1,3 +1,3 @@
 # 404 Not Found
 
-The application that handles missing resources.
+The service that handles missing resources.
