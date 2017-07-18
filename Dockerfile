@@ -23,6 +23,6 @@ RUN mkdir -p /opt
 COPY 404.go /opt/
 RUN cd /opt && go build -o 404 . && rm -Rf 404.go
 
-EXPOSE 8404
+EXPOSE 80
 
 CMD [ "/opt/404" ]
