@@ -30,5 +30,5 @@ func main() {
 		io.WriteString(w, "404 Not Found")
 	})
 
-	http.ListenAndServe(":8404", nil)
+	http.ListenAndServe(":80", nil)
 }
