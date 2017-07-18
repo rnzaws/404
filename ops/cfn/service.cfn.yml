@@ -86,7 +86,7 @@ Resources:
       TaskDefinition: !Ref TaskDefinition
       LoadBalancers:
         - ContainerName: !Ref TaskName
-          ContainerPort: 8404
+          ContainerPort: 80
           TargetGroupArn: !Ref TargetGroupArn
     DependsOn:
       - TaskDefinition
@@ -101,8 +101,7 @@ Resources:
           Essential: true
           Memory: 128
           PortMappings:
-            - ContainerPort: 8404
-              HostPort: 8404
+            - ContainerPort: 80
           Environment:
             - Name: Tag
               Value: !Ref Tag
@@ -113,7 +112,6 @@ Outputs:
     Value: !Ref Service
     Export:
       Name: !Sub "${AWS::StackName}-not-found-service-arn"
-
 
   LoadBalancerDnsName:
     Value: !GetAtt Service.Name
