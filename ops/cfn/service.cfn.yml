@@ -111,11 +111,11 @@ Outputs:
   ServiceArn:
     Value: !Ref Service
     Export:
-      Name: !Sub "${AWS::StackName}-not-found-service-arn"
+      Name: !Sub "${AWS::StackName}-${TaskName}-service-arn"
 
   LoadBalancerDnsName:
     Value: !GetAtt Service.Name
     Export:
-      Name: !Sub "${AWS::StackName}-not-found-service-name"
+      Name: !Sub "${AWS::StackName}-${TaskName}-service-name"
 
 
