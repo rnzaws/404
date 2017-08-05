@@ -27,7 +27,7 @@ import (
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		io.WriteString(w, "404 Not Found!")
+		io.WriteString(w, "404 Not Found")
 	})
 
 	http.ListenAndServe(":80", nil)
