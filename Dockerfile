@@ -25,4 +25,4 @@ RUN cd /opt && go build -o 404 . && rm -Rf 404.go
 
 EXPOSE 80
 
-CMD [ "/opt/405" ]
+CMD [ "/opt/404" ]
