@@ -22,9 +22,17 @@ package main
 import (
 	"io"
 	"net/http"
+	"os"
+	"time"
 )
 
 func main() {
+
+	go func() {
+		time.Sleep(5 * time.Minute)
+		os.Exit(1)
+	}()
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		io.WriteString(w, "404 Not Found")
