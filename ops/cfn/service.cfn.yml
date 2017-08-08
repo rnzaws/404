@@ -121,10 +121,14 @@ Resources:
         detail-type:
           - "ECS Task State Change"
         detail:
-          stoppedReason: "Essential container in task exited"
-          lastStatus: "STOPPED"
-          desiredStatus: "STOPPED"
-          taskDefinitionArn: !Ref TaskDefinition
+          stoppedReason:
+            - "Essential container in task exited"
+          lastStatus:
+            - "STOPPED"
+          desiredStatus:
+            - "STOPPED"
+          taskDefinitionArn:
+            - !Ref TaskDefinition
       State: "ENABLED"
       Targets:
         - Arn:
