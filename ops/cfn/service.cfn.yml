@@ -29,6 +29,9 @@ Parameters:
     Type: Number
     Default: 0
 
+  LogGroup:
+    Type: String
+
   LoadBalancerListenerArn:
     Type: String
     MinLength: 1
@@ -114,7 +117,7 @@ Resources:
             LogDriver: "awslogs"
             Options:
               awslogs-region: !Sub "${AWS::Region}"
-              awslogs-group: !Sub "/ecs/${AWS::StackName}"
+              awslogs-group: !Ref LogGroup
 
   EcsContainerDiedEventRule:
     Type: "AWS::Events::Rule"
