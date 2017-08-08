@@ -59,6 +59,12 @@ Parameters:
     MaxLength: 255
     Description: "Target group arn"
 
+  DeploymentPipelineStackName:
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    Description: "Deployment pipeline stack name"
+
 Resources:
 
   EcsServiceRole:
@@ -105,16 +111,40 @@ Resources:
             - Name: Tag
               Value: !Ref Tag
 
-Outputs:
+  #EcsContainerDiedEventRule:
+  #  Type: "AWS::Events::Rule"
+  #  Properties:
+  #    Description: !Sub "EcsContainerDiedEventRule-${AWS::StackName}"
+  #    EventPattern:
+  #      source:
+  #        - "aws.ecs"
+  #      detail-type:
+  #        - "ECS Task State Change"
+  #      detail:
+  #      stoppedReason: "Essential container in task exited"
+  #    State: "ENABLED"
+  #    Targets:
+  #      - Arn:
+  #          Fn::ImportValue: !Sub "${DeploymentPipelineStackName}-ecs-container-died-topic-arn"
+  #        Id: !Sub "ecs-container-died-target-${AWS::StackName}"
+
+Ou#tputs:
+
+  # TODO: Do we need the TaskName here too?
 
   ServiceArn:
     Value: !Ref Service
     Export:
       Name: !Sub "${AWS::StackName}-${TaskName}-service-arn"
 
-  LoadBalancerDnsName:
+  ServiceName:
     Value: !GetAtt Service.Name
     Export:
       Name: !Sub "${AWS::StackName}-${TaskName}-service-name"
+
+  TaskDefinitionArn:
+    Value: !Ref TaskDefinition
+    Export:
+      Name: !Sub "${AWS::StackName}-${TaskName}-task-definition-arn"
 
 
