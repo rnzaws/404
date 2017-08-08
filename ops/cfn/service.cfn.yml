@@ -110,6 +110,11 @@ Resources:
           Environment:
             - Name: Tag
               Value: !Ref Tag
+          LogConfiguration:
+            LogDriver: "awslogs"
+            Options:
+              awslogs-region: !Sub "${AWS::Region}"
+              awslogs-group: "/ecs/${AWS::StackName}"
 
   EcsContainerDiedEventRule:
     Type: "AWS::Events::Rule"
