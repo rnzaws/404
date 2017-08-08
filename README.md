@@ -1,6 +1,6 @@
 # 404 Not Found
 
-The service that handles missing resources. Simply an example container.
+The service that handles missing resources. An example container service.
 
 Any code, applications, scripts, templates, proofs of concept,
 documentation and other items are provided for illustration purposes only.
