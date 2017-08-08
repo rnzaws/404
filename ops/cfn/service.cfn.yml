@@ -128,7 +128,7 @@ Resources:
   #          Fn::ImportValue: !Sub "${DeploymentPipelineStackName}-ecs-container-died-topic-arn"
   #        Id: !Sub "ecs-container-died-target-${AWS::StackName}"
 
-Ou#tputs:
+Outputs:
 
   # TODO: Do we need the TaskName here too?
 
