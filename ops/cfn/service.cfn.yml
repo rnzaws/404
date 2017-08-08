@@ -114,7 +114,7 @@ Resources:
             LogDriver: "awslogs"
             Options:
               awslogs-region: !Sub "${AWS::Region}"
-              awslogs-group: "/ecs/${AWS::StackName}"
+              awslogs-group: !Sub "/ecs/${AWS::StackName}"
 
   EcsContainerDiedEventRule:
     Type: "AWS::Events::Rule"
