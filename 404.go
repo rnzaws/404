@@ -20,6 +20,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -35,6 +36,7 @@ func main() {
 	*/
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("404 Not Found")
 		w.WriteHeader(http.StatusNotFound)
 		io.WriteString(w, "404 Not Found")
 	})
