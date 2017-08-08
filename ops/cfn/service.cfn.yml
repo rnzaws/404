@@ -118,6 +118,7 @@ Resources:
             Options:
               awslogs-region: !Sub "${AWS::Region}"
               awslogs-group: !Ref LogGroup
+              awslogs-stream-prefix: !Ref Tag
 
   EcsContainerDiedEventRule:
     Type: "AWS::Events::Rule"
