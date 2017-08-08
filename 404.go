@@ -22,17 +22,17 @@ package main
 import (
 	"io"
 	"net/http"
-	"os"
-	"time"
 )
 
 func main() {
 
 	// Test failure of the container
-	go func() {
-		time.Sleep(5 * time.Minute)
-		os.Exit(1)
-	}()
+	/*
+		go func() {
+			time.Sleep(5 * time.Minute)
+			os.Exit(1)
+		}()
+	*/
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
