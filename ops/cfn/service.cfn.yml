@@ -139,7 +139,7 @@ Resources:
 
 Outputs:
 
-  # TODO: Do we need the TaskName here too?
+  # TODO Do we need the TaskName here too?
 
   ServiceArn:
     Value: !Ref Service
@@ -155,5 +155,4 @@ Outputs:
     Value: !Ref TaskDefinition
     Export:
       Name: !Sub "${AWS::StackName}-${TaskName}-task-definition-arn"
-
 
