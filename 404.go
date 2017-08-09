@@ -67,11 +67,12 @@ func main() {
 		w.WriteHeader(http.StatusNotFound)
 		io.WriteString(w, "404 Not Found")
 
+		// Test to validate logs being sent to CloudWatch Logs
+		log.WithFields(log.Fields{"referrer": r.Referer()}).Info("404 Not Found")
+
 		if r.Referer() == "" {
 			return
 		}
-
-		log.WithFields(log.Fields{"referrer": r.Referer()}).Info("404 Not Found")
 
 		notFoundJson, err := json.Marshal(&NotFoundEvent{Referrer: r.Referer(), Time: currentTimeInMillis()})
 		if err != nil {
