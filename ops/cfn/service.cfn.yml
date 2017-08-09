@@ -74,6 +74,12 @@ Parameters:
     MaxLength: 255
     Description: "Deployment pipeline stack name"
 
+  TaskKinesisStackName:
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    Description: "Task kinesis stack name"
+
 Resources:
 
   EcsServiceRole:
@@ -118,8 +124,11 @@ Resources:
           PortMappings:
             - ContainerPort: 80
           Environment:
-            - Name: Tag
+            - Name: "Tag"
               Value: !Ref Tag
+            - Name: "KINESIS_STREAM_NAME"
+              Value:
+                Fn::ImportValue: !Sub "${TaskKinesisStackName}-kinesis-stream-404-name"
           LogConfiguration:
             LogDriver: "awslogs"
             Options:
