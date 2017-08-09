@@ -21,7 +21,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 	"math/rand"
 	"net/http"
@@ -68,19 +67,15 @@ func main() {
 		w.WriteHeader(http.StatusNotFound)
 		io.WriteString(w, "404 Not Found")
 
-		// Test logging to CloudWatch Logs
-		log.Info("Simple 404 Not Found")
-		log.Info("404 Not Found %s", r.Referer())
-
 		if r.Referer() == "" {
 			return
 		}
 
-		log.Error("Test log error: %v", errors.New("emit macho dwarf: elf header corrupted"))
+		log.WithFields(log.Fields{"referrer": r.Referer()}).Info("404 Not Found")
 
 		notFoundJson, err := json.Marshal(&NotFoundEvent{Referrer: r.Referer(), Time: currentTimeInMillis()})
 		if err != nil {
-			log.Error("Cannot convert to json: %v", err)
+			log.WithFields(log.Fields{"error": err}).Error("Cannot convert JSON")
 			return
 		}
 
@@ -92,7 +87,7 @@ func main() {
 			})
 
 			if err != nil {
-				log.Error("Unable to insert record in stream: %v", err)
+				log.WithFields(log.Fields{"error": err}).Error("Unable to insert record in kinesis stream")
 			}
 		}(notFoundJson)
 	})
