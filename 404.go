@@ -22,7 +22,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"math/rand"
 	"net/http"
@@ -56,7 +55,7 @@ func main() {
 
 	log.SetFormatter(&log.JSONFormatter{})
 	log.SetOutput(os.Stdout)
-	log.SetLevel(log.WarnLevel)
+	log.SetLevel(log.InfoLevel)
 
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
 
@@ -71,10 +70,13 @@ func main() {
 		io.WriteString(w, "404 Not Found")
 
 		// Test logging to CloudWatch Logs
-		fmt.Println("404 Not Found")
+		log.Info("404 Not Found %s", r.Referer())
 
-		testErr := errors.New("emit macho dwarf: elf header corrupted")
-		log.Info("Test log info: %v", testErr)
+		if r.Referer() == "" {
+			return
+		}
+
+		log.Error("Test log error: %v", errors.New("emit macho dwarf: elf header corrupted"))
 
 		notFoundJson, err := json.Marshal(&NotFoundEvent{Referrer: r.Referer(), Time: currentTimeInMillis()})
 		if err != nil {
