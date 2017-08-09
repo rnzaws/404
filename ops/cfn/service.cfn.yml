@@ -62,6 +62,12 @@ Parameters:
     MaxLength: 255
     Description: "Target group arn"
 
+  TaskRoleArn:
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    Description: "Task role arn"
+
   DeploymentPipelineStackName:
     Type: String
     MinLength: 1
@@ -103,6 +109,7 @@ Resources:
     Type: "AWS::ECS::TaskDefinition"
     Properties:
       Family: !Sub "${AWS::StackName}-${TaskName}"
+      TaskRoleArn: !Ref TaskRoleArn
       ContainerDefinitions:
         - Name: !Ref TaskName
           Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${CiRepositoryName}:${Tag}"
