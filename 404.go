@@ -55,7 +55,6 @@ func main() {
 
 	log.SetFormatter(&log.JSONFormatter{})
 	log.SetOutput(os.Stdout)
-	log.SetLevel(log.InfoLevel)
 
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
 
@@ -70,6 +69,7 @@ func main() {
 		io.WriteString(w, "404 Not Found")
 
 		// Test logging to CloudWatch Logs
+		log.Info("Simple 404 Not Found")
 		log.Info("404 Not Found %s", r.Referer())
 
 		if r.Referer() == "" {
