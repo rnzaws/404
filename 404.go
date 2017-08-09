@@ -21,6 +21,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"math/rand"
@@ -33,6 +34,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/kinesis"
+	log "github.com/sirupsen/logrus"
 )
 
 var kinesisStreamName = aws.String(os.Getenv("KINESIS_STREAM_NAME"))
@@ -52,6 +54,10 @@ func main() {
 		}()
 	*/
 
+	log.SetFormatter(&log.JSONFormatter{})
+	log.SetOutput(os.Stdout)
+	log.SetLevel(log.WarnLevel)
+
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	session := session.Must(session.NewSession(&aws.Config{
@@ -63,23 +69,30 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		io.WriteString(w, "404 Not Found")
+
+		// Test logging to CloudWatch Logs
 		fmt.Println("404 Not Found")
+
+		testErr := errors.New("emit macho dwarf: elf header corrupted")
+		log.Info("Test log info: %v", testErr)
 
 		notFoundJson, err := json.Marshal(&NotFoundEvent{Referrer: r.Referer(), Time: currentTimeInMillis()})
 		if err != nil {
-			fmt.Println("Cannot convert to json: %v", err)
+			log.Error("Cannot convert to json: %v", err)
 			return
 		}
 
-		_, err = svc.PutRecord(&kinesis.PutRecordInput{
-			Data:         notFoundJson,
-			PartitionKey: aws.String(strconv.Itoa(random.Int())),
-			StreamName:   kinesisStreamName,
-		})
+		go func(notFoundJson []byte) {
+			_, err = svc.PutRecord(&kinesis.PutRecordInput{
+				Data:         notFoundJson,
+				PartitionKey: aws.String(strconv.Itoa(random.Int())),
+				StreamName:   kinesisStreamName,
+			})
 
-		if err != nil {
-			fmt.Println("Unable to insert record in stream: %v", err)
-		}
+			if err != nil {
+				log.Error("Unable to insert record in stream: %v", err)
+			}
+		}(notFoundJson)
 	})
 
 	http.ListenAndServe(":80", nil)
