@@ -1,7 +1,8 @@
 # 404 Not Found
 
 The service that handles missing resources. A demo container service, it
-only serves a 404.
+only serves a 404 and writes the data to a [Kinesis Stream](https://aws.amazon.com/kinesis/streams/) if
+a referrer is present.
 
 Any code, applications, scripts, templates, proofs of concept,
 documentation and other items are provided for illustration purposes only.
