@@ -129,6 +129,8 @@ Resources:
             - Name: "KINESIS_STREAM_NAME"
               Value:
                 Fn::ImportValue: !Sub "${TaskKinesisStackName}-kinesis-stream-404-name"
+            - Name: "AWS_REGION"
+              Value: !Sub "${AWS::Region}"
           LogConfiguration:
             LogDriver: "awslogs"
             Options:
