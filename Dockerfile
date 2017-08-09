@@ -18,11 +18,10 @@
 
 FROM golang:1.8
 
-
-RUN mkdir -p /opt
-COPY 404.go /opt/
-RUN cd /opt && go build -o 404 . && rm -Rf 404.go
+COPY ./404.go /go/src/github.com/rnzsgh/404/
+WORKDIR /go/src/github.com/rnzsgh/404
+RUN go get ./ && go build -o 404 . && rm -Rf 404.go && mv 404 /
 
 EXPOSE 80
 
-CMD [ "/opt/404" ]
+CMD [ "/404" ]
