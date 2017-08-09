@@ -20,10 +20,27 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
+	"os"
+	"strconv"
+	"syscall"
+	"time"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/kinesis"
 )
+
+var kinesisStreamName = aws.String(os.Getenv("KINESIS_STREAM_NAME"))
+
+type NotFoundEvent struct {
+	Referrer string `json:"referrer"`
+	Time     int64  `json:"time"`
+}
 
 func main() {
 
@@ -35,11 +52,41 @@ func main() {
 		}()
 	*/
 
+	random := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	session := session.Must(session.NewSession(&aws.Config{
+		Region: aws.String(os.Getenv("AWS_REGION")),
+	}))
+
+	svc := kinesis.New(session)
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("404 Not Found")
 		w.WriteHeader(http.StatusNotFound)
 		io.WriteString(w, "404 Not Found")
+		fmt.Println("404 Not Found")
+
+		notFoundJson, err := json.Marshal(&NotFoundEvent{Referrer: r.Referer(), Time: currentTimeInMillis()})
+		if err != nil {
+			fmt.Println("Cannot convert to json: %v", err)
+			return
+		}
+
+		_, err = svc.PutRecord(&kinesis.PutRecordInput{
+			Data:         notFoundJson,
+			PartitionKey: aws.String(strconv.Itoa(random.Int())),
+			StreamName:   kinesisStreamName,
+		})
+
+		if err != nil {
+			fmt.Println("Unable to insert record in stream: %v", err)
+		}
 	})
 
 	http.ListenAndServe(":80", nil)
+}
+
+func currentTimeInMillis() int64 {
+	tv := new(syscall.Timeval)
+	syscall.Gettimeofday(tv)
+	return (int64(tv.Sec)*1e3 + int64(tv.Usec)/1e3)
 }
