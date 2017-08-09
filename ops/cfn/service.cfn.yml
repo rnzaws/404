@@ -74,34 +74,20 @@ Parameters:
     MaxLength: 255
     Description: "Deployment pipeline stack name"
 
-  TaskKinesisStackName:
+  SystemKinesisStackName:
     Type: String
     MinLength: 1
     MaxLength: 255
-    Description: "Task kinesis stack name"
+    Description: "System kinesis stack name"
 
 Resources:
-
-  EcsServiceRole:
-    Type: "AWS::IAM::Role"
-    Properties:
-      Path: /
-      AssumeRolePolicyDocument: |
-        {
-            "Statement": [{
-                "Effect": "Allow",
-                "Principal": { "Service": [ "ecs.amazonaws.com" ]},
-                "Action": [ "sts:AssumeRole" ]
-            }]
-        }
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole
 
   Service:
     Type: "AWS::ECS::Service"
     Properties:
       Cluster: !Ref EcsClusterName
-      Role: !Ref EcsServiceRole
+      Role:
+        Fn::ImportValue: !Sub "${SystemKinesisStackName}-ecs-service-role"
       DesiredCount: !Ref DesiredCount
       TaskDefinition: !Ref TaskDefinition
       LoadBalancers:
@@ -128,7 +114,7 @@ Resources:
               Value: !Ref Tag
             - Name: "KINESIS_STREAM_NAME"
               Value:
-                Fn::ImportValue: !Sub "${TaskKinesisStackName}-kinesis-stream-404-name"
+                Fn::ImportValue: !Sub "${SystemKinesisStackName}-kinesis-stream-404-name"
             - Name: "AWS_REGION"
               Value: !Sub "${AWS::Region}"
           LogConfiguration:
@@ -166,20 +152,18 @@ Resources:
 
 Outputs:
 
-  # TODO Do we need the TaskName here too?
-
   ServiceArn:
     Value: !Ref Service
     Export:
-      Name: !Sub "${AWS::StackName}-${TaskName}-service-arn"
+      Name: !Sub "${AWS::StackName}-service-arn"
 
   ServiceName:
     Value: !GetAtt Service.Name
     Export:
-      Name: !Sub "${AWS::StackName}-${TaskName}-service-name"
+      Name: !Sub "${AWS::StackName}-service-name"
 
   TaskDefinitionArn:
     Value: !Ref TaskDefinition
     Export:
-      Name: !Sub "${AWS::StackName}-${TaskName}-task-definition-arn"
+      Name: !Sub "${AWS::StackName}-task-definition-arn"
 
