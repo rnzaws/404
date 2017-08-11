@@ -19,7 +19,6 @@ AWSTemplateFormatVersion: '2010-09-09'
 # limitations under the License.
 
 Parameters:
-djfadf
 
   Tag:
     Type: String
