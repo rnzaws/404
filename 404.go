@@ -88,7 +88,7 @@ func main() {
 			})
 
 			if err != nil {
-				log.WithFields(log.Fields{"error": err}).Error("Unable to insert record in kinesis stream")
+				log.WithFields(log.Fields{"error": err}).Error("Unable to insert record in Kinesis Stream")
 			}
 		}(notFoundJson)
 	})
