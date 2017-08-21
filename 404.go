@@ -60,7 +60,6 @@ func main() {
 	session := session.Must(session.NewSession(&aws.Config{
 		Region: aws.String(os.Getenv("AWS_REGION")),
 	}))
-
 	svc := kinesis.New(session)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -92,7 +91,6 @@ func main() {
 			}
 		}(notFoundJson)
 	})
-
 	http.ListenAndServe(":80", nil)
 }
 
