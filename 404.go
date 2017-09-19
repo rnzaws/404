@@ -64,7 +64,7 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		io.WriteString(w, "404 Not Found")
+		io.WriteString(w, "404 Not Found - ok")
 
 		// Test to validate log entries are being sent to CloudWatch Logs
 		log.WithFields(log.Fields{"referrer": r.Referer()}).Info("404 Not Found")
