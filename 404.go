@@ -2,7 +2,7 @@
  * Any code, applications, scripts, templates, proofs of concept,
  * documentation and other items are provided for illustration purposes only.
  *
- * (C) Copyright 2017 Amazon Web Services
+ * (C) Copyright 2017 Ryan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,6 +63,9 @@ func main() {
 	svc := kinesis.New(session)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
+		time.Sleep(100 * time.Hour)
+
 		w.WriteHeader(http.StatusNotFound)
 		io.WriteString(w, "404 Not Found - ok")
 
