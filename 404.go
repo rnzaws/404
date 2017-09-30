@@ -64,7 +64,7 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
-		time.Sleep(100 * time.Hour)
+		//time.Sleep(100 * time.Hour)
 
 		w.WriteHeader(http.StatusNotFound)
 		io.WriteString(w, "404 Not Found - ok")
